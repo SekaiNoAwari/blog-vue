@@ -3,6 +3,12 @@
     <div class="my-height"></div>
   <div class="Room  my-shadow" ref="room">
     <div class="room-left">
+      <el-tooltip content="窗口最小化" placement="left">
+        <div class="menus-item" style="cursor: pointer" @click="closeFrame">
+          <i class="close icon" style="color: whitesmoke"/><span style="color: whitesmoke"></span>
+        </div>
+      </el-tooltip>
+      <br>
       <div class="block">
         <el-avatar :src="avatar"></el-avatar>
       </div>
@@ -17,12 +23,6 @@
       <div class="menus-item" style="cursor: pointer" @click="changeView(2)">
           <i class="user plus icon" style="color: whitesmoke"/><span style="color: whitesmoke"></span>
       </div>
-      </el-tooltip>
-      <br>
-      <el-tooltip content="窗口最小化" placement="left">
-        <div class="menus-item" style="cursor: pointer" @click="closeFrame">
-          <i class="close icon" style="color: whitesmoke"/><span style="color: whitesmoke"></span>
-        </div>
       </el-tooltip>
     </div>
     <div class="room-center">

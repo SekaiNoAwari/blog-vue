@@ -4,13 +4,13 @@
     <div class="home-banner">
       <div class="banner-container">
         <h1 class="blog-title animated zoomIn">
-          首页
+          欢迎
         </h1>
         <!-- 联系方式 -->
         <div class="blog-contact animated zoomIn">
-          <a class="github circular icon button" data-content="https://gitee.com/fang-jiale" data-position="bottom center" style="margin-right: 50px"><i class="github icon"></i></a>
+          <a class="github circular icon button" data-content="https://github.com/SekaiNoAwari" data-position="bottom center" style="margin-right: 50px"><i class="github icon"></i></a>
           <a class="wechat circular icon button" style="margin-right: 50px"><i class="weixin icon"></i></a>
-          <a class="qq circular icon button" data-content="1626680964" data-position="bottom center"><i class="qq icon"></i></a>
+          <a class="qq circular icon button" data-content="354799722" data-position="bottom center"><i class="qq icon"></i></a>
         </div>
         <div class="ui wechat-qr flowing popup transition hidden">
           <img src="https://r.photo.store.qq.com/psc?/V53KcXfb1umonn4HbITu3rINxs43TczD/45NBuzDIW489QBoVep5mcaapv*CZPLor9HYeVrOOiVLnyRm8OUpwb6xeJ6lITPL.CQBAMN*ufWnqF4BJBqO4o0iDboC.V.GwA1i2AehYs7g!/r" alt="" class="ui rounded image" style="width: 110px">
@@ -39,13 +39,13 @@
               </div>
             </div>
 
-            <!--content-->
-            <div class="ui attached  segment my-blog-shadow">
+            <!--显示置顶微博-->
+            <div class="ui attached  segment my-blog-shadow" v-if="topList">
 
-              <div class="ui padded vertical segment m-padded-tb-large" v-for="item in dataList" :key="item.blogId">
+              <div class="ui padded vertical segment m-padded-tb-large" v-for="item in topList" :key="item.blogId">
                 <div class="ui middle aligned mobile reversed stackable grid">
                   <div class="eleven wide column" style="cursor:pointer;">
-                    <h3 class="ui header" @click="toBlog(item.blogId)">{{item.title}}</h3>
+                    <span class="not-inline sticky-icon" style="margin-right: 10px">置顶</span><span class="not-inline new-icon" v-if="new Date()-item.createTime < 30*24*60*1000">NEW</span><h3 class="ui header not-inline" @click="toBlog(item.blogId)">{{item.title}}</h3>
                     <p class="m-text" @click="toBlog(item.blogId)">{{item.description}}</p>
                     <div class="ui grid">
                       <div class="eleven wide column">
@@ -75,24 +75,64 @@
                       <img v-bind:src=item.firstPicture @click="toBlog(item.blogId)" alt="" class="ui rounded image">
                     </a>
                   </div>
-
                 </div>
               </div>
             </div>
+            <!--content-->
+            <div>
+              <div class="ui attached  segment my-blog-shadow">
 
-            <!--footer-->
-            <div class="ui bottom attached segment my-blog-shadow">
-              <div class="pagination-container">
-                <el-pagination
-                  class="pagiantion"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="pagination.currentPage"
-                  :page-sizes="[2,6,10,15]"
-                  :page-size="pagination.pageSize"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="pagination.total">
-                </el-pagination>
+                <div class="ui padded vertical segment m-padded-tb-large" v-for="item in dataList" :key="item.blogId">
+                  <div class="ui middle aligned mobile reversed stackable grid">
+                    <div class="eleven wide column" style="cursor:pointer;">
+                      <span class="not-inline new-icon" style="margin-right: 10px" v-if="new Date().getTime() - Date.parse(new Date(item.createTime)) < 3*24*60*60*1000">NEW</span><h3 class="ui header not-inline" @click="toBlog(item.blogId)">{{item.title}}</h3>
+                      <p class="m-text" @click="toBlog(item.blogId)">{{item.description}}</p>
+                      <div class="ui grid">
+                        <div class="eleven wide column">
+                          <div class="ui mini horizontal link list">
+                            <div class="item">
+                              <img v-bind:src=item.avatar class="ui avatar image">
+                              <div class="content"><a class="header">{{item.nickname}}</a></div>
+                            </div>
+                            <div class="item">
+                              <i class="calendar icon"></i> {{item.createTime}}
+                            </div>
+                            <div class="item">
+                              <i class="eye icon"></i> {{item.views}}
+                            </div>
+                            <div class="item">
+                              <i class="thumbs up outline icon"></i> {{item.thumbs}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="right aligned five wide column">
+                          <a target="_blank" class="ui my-blue basic label m-padded-tiny m-text-thin">{{item.typeName}}</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="five wide column">
+                      <a target="_blank">
+                        <img v-bind:src=item.firstPicture @click="toBlog(item.blogId)" alt="" class="ui rounded image">
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!--footer-->
+              <div class="ui bottom attached segment my-blog-shadow">
+                <div class="pagination-container">
+                  <el-pagination
+                    class="pagiantion"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pagination.currentPage"
+                    :page-sizes="[2,6,10,15]"
+                    :page-size="pagination.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pagination.total">
+                  </el-pagination>
+                </div>
               </div>
             </div>
 
@@ -176,7 +216,7 @@
 </template>
 
 <script>
-import { Notification } from 'element-ui'
+// import { Notification } from 'element-ui'
 import Footer from '../components/layout/Footer'
 export default {
   // 注册组件
@@ -189,6 +229,7 @@ export default {
       typeList: [], // 分类列表的数据
       tagList: [], // 标签列表的数据
       latestList: [], // 最新发布的博客列表的数据
+      topList: [], // 置顶博客列表
       pagination: { // 分页相关模型数据
         currentPage: 1, // 当前页码
         pageSize: 6, // 每页显示的记录数
@@ -219,6 +260,7 @@ export default {
     this.getUser()
     this.findPage()
     this.getTypeList()
+    this.getTopList()
     this.getTagList()
     this.getLatestList()
     this.reload()
@@ -235,18 +277,18 @@ export default {
     message () {
       const messageFlag = sessionStorage.getItem('messageFlag')
       if (messageFlag == null) {
-        Notification({
-          title: '消息',
-          message: '在本站中各位可以创建用户发布博客、评论、留言等进行测试，但是没有实际意义的博客会被站主删除，望各位知悉',
-          duration: 0
-        })
-        const h = this.$createElement
-        Notification({
-          title: '通知',
-          message: h('i', { style: 'color: teal' }, '此次更新了一个新模块：聊天室模块，并且已经支持上传图片等功能；后花园也有新功能，测试还不完善可能还有bug。' +
-            '有关ElasticSearch服务的2核4G服务器过期了（由于贫穷），搜索功能暂时无法使用，敬请谅解！'),
-          duration: 0
-        })
+        // Notification({
+        //   title: '消息',
+        //   message: '在本站中各位可以创建用户发布博客、评论、留言等进行测试，但是没有实际意义的博客会被站主删除，望各位知悉',
+        //   duration: 0
+        // })
+        // const h = this.$createElement
+        // Notification({
+        //   title: '通知',
+        //   message: h('i', { style: 'color: teal' }, '此次更新了一个新模块：聊天室模块，并且已经支持上传图片等功能；后花园也有新功能，测试还不完善可能还有bug。' +
+        //     '有关ElasticSearch服务的2核4G服务器过期了（由于贫穷），搜索功能暂时无法使用，敬请谅解！'),
+        //   duration: 0
+        // })
       }
       sessionStorage.setItem('messageFlag', 'true')
     },
@@ -280,6 +322,10 @@ export default {
     async getTypeList () {
       const { data: res } = await this.$http.get('/api/server/home/getTypeCount')
       this.typeList = res.data
+    },
+    async getTopList () {
+      const { data: res } = await this.$http.get('/api/server/home/getTopBlogs')
+      this.topList = res.data
     },
     async getTagList () {
       const { data: res } = await this.$http.get('/api/server/home/getTagCount')
