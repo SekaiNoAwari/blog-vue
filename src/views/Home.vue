@@ -40,7 +40,7 @@
             </div>
 
             <!--显示置顶微博-->
-            <div class="ui attached  segment my-blog-shadow" v-if="topList">
+            <div class="ui attached  segment my-blog-shadow" v-if="topList && pagination.currentPage === 1">
 
               <div class="ui padded vertical segment m-padded-tb-large" v-for="item in topList" :key="item.blogId">
                 <div class="ui middle aligned mobile reversed stackable grid">
@@ -156,7 +156,7 @@
               <div class="ui my-blue segment">
                 <div class="ui fluid vertical menu">
                   <template v-for="(item, index) in typeList">
-                    <a class="item" v-if='index<6' :key="item.typeId" @click="toType(item.typeId)">
+                    <a class="item" v-if='index<6 && item.typeCount > 0' :key="item.typeId" @click="toType(item.typeId)">
                       {{ item.typeName }}
                       <div class="ui blue basic left pointing label">{{item.typeCount}}</div>
                     </a>
@@ -179,7 +179,7 @@
               </div>
               <div class="ui my-blue segment">
                 <template v-for="(item, index) in tagList">
-                  <a target="_blank" class="ui my-blue basic left pointing label m-margin-tb-tiny" v-if='index<15' :key="item.tagId" @click="toTag(item.tagId)">
+                  <a target="_blank" class="ui my-blue basic left pointing label m-margin-tb-tiny" v-if='index<15 && item.tagCount > 0' :key="item.tagId" @click="toTag(item.tagId)">
                     {{item.tagName}} <div class="detail">{{item.tagCount}}</div>
                   </a>
                 </template>
